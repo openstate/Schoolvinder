@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Uitleg over Schoolvinder.nl{% endblock %}
+
+{% block extrahead %}
+	<style type="text/css" media="screen">
+		#content {
+			padding-right: 8em;
+		}
+	</style>
+{% endblock %}
+
+{% block map %}{% endblock %}
+
+
+{% block content %}
+
+	<h3>BRIN</h3>
+	
+	<p>Onderwijsinstellingen worden geïdentificeerd met een BRIN-nummer welke uniek is.</p>
+
+	<h3>Unieke Adressering</h3>
+
+	<p>Elke school heeft op schoolvinder.nl een adres in de vorm van:
+		<blockquote><a href="http://www.schoolvinder.nl/school/10WI/prins-mauritsschool/">http://www.schoolvinder.nl/school/10WI/prins-mauritsschool/</a></blockquote>
+	waar de school geïdentificeerd wordt door het BRIN-nummer en de naam wordt toegevoegd voor leesbaarheid en zoekmachine-vindbaarheid.
+	</p>
+
+	<h3>Brondata</h3>
+	
+	<p>De brongegevens zijn de zoekmachine van CFI met de verschillende invoer en uitvoerwaarden:
+		<blockquote><a href="http://www.cfi.nl/Public/BriWeb/raadplegen.asp">http://www.cfi.nl/Public/BriWeb/raadplegen.asp</a></blockquote>
+		Deze biedt meer mogelijkheden dan op het eerste gezicht duidelijk maar het is inconsistent en lastig te gebruiken zowel voor gebruikers als voor programmeurs.</p>
+	
+	<p>De verschillende scholen hebben binnen CFI al een eigen landingspagina waar de gegevens vandaan worden gehaald:
+		<blockquote><a href="http://www.cfi.nl/Public/BriWeb/detail.asp?brinnummer=10WI">http://www.cfi.nl/Public/BriWeb/detail.asp?brinnummer=10WI</a></blockquote>
+	</p>
+
+	<h3>Herbruikbaarheid</h3>
+	
+	<p>Elke school detailpagina kan met een simpele toevoeging zijn gegevens ook teruggeven als JSON:
+		<blockquote><a href="http://www.schoolvinder.nl/school/10WI/prins-mauritsschool/?format=json">http://www.schoolvinder.nl/school/10WI/prins-mauritsschool/?format=json</a></blockquote>
+		waardoor op basis van het BRIN-nummer de basisgegevens van elke school eenvoudig herbruikbaar kunnen worden opgehaald.</p>
+		
+	<p>Daarnaast bevat elke school-pagina ook een <a href="http://microformats.org">microformat</a> die de pagina identificeert als een instelling met eenvoudig uit te lezen contactgegevens. Dit bevordert weer de herbruikbaarheid en zoekmachine-vindbaarheid.</p>		
+		</p>
+
+{% endblock %}

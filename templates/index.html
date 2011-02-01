@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+	
+<script>
+
+	var schools = [];
+	{% for result in results %}
+		schools.push("{{ result.0 }}");
+ 	{% endfor %}
+
+
+	var centered = false;
+
+	function updateBRIN(brin, count) {
+		$.getJSON('/school/' + brin + '/?format=json', {}, function(data) {
+			var phone = data['school']['telephone'];
+			var kind = data['school']['kind'];
+			
+			var name = data['school']['name'];
+			
+			var street = data['school']['street'];
+			var city = data['school']['postcodecity'].split()[data['school']['postcodecity'].split().length-1];
+			
+			$("#brin_" + brin + " .phone").text(phone);
+			$("#brin_" + brin + " .type").text(kind);
+			
+			// Add marker to the map
+			geocoder.getLatLng(
+				street + "," + city + ',the Netherlands',
+				function(point) {
+					
+					if (!centered) {
+						map.setCenter(point, 13);
+						centered = true;
+					}
+					
+					var schoolIcon = new GIcon(G_DEFAULT_ICON);
+					schoolIcon.image = '/static/icon_' + (count+1) + '.png';
+					schoolIcon.iconSize = new GSize(21, 26);
+					schoolIcon.shadow = '';
+					schoolIcon.iconAnchor = new GPoint(10, 5);
+					var markerOptions = { icon:schoolIcon };
+					
+					var marker = new GMarker(point, markerOptions);
+					
+					GEvent.addListener(marker, "click", function() {					
+					    var myHtml = '<a href="/school/' + brin + '/">' + name + '</a>';
+							map.openInfoWindowHtml(point, myHtml);
+					});
+					
+					map.addOverlay(marker);
+				});
+		});
+	}
+
+	$(document).ready(function () {
+		var mapControl = new GSmallMapControl();
+		map.addControl(mapControl);
+		
+		geocoder.getLatLng('Utrecht,the Netherlands', function(point) {
+			map.setCenter(point, 7);
+		});
+		
+		for (var counter=0; counter < schools.length; counter++) {
+			updateBRIN(schools[counter], counter);
+		};
+	});
+</script>
+	
+{% endblock %}
+
+{% block content %}
+	{% if results %}
+		<ol id="results">
+		{% for result in results %}
+			<li id="brin_{{ result.0 }}" class="school vcard icon{{ forloop.counter }}"><a class="url fn" href="/school/{{ result.0 }}/{{ result.2 }}/">{{ result.1 }}</a><br>
+				soort school: <span class="type"></span><br>
+				telefoonnummer: <span class="phone tel"></span>
+			</li>
+		{% endfor %}
+		</ol>
+
+		<p id="paging">
+			{% if previousPage %}
+				<a href="/search/?q={{ q|urlencode }}&filter={{ filter }}&page={{page|add:"-1"}}">vorige <img src="/static/previousPage.png"></a>
+			{% endif %}
+			{{ page|add:"1" }}
+			{% if nextPage %}
+				<a href="/search/?q={{ q|urlencode }}&filter={{ filter }}&page={{page|add:"1"}}"><img src="/static/nextPage.png"> volgende</a>
+			{% endif %}
+		</p>
+
+		<p>Ook in <a href="{{ csv }}">CSV</a></p>
+	{% endif %}
+{% endblock %}

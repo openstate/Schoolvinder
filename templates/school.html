@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}{{ school.name }}{% endblock %}
+
+{% block extrahead %}
+<script>
+	$(document).ready(function() {
+		var address = '{{ school.street }}';
+		var city = '{{ school.muni }}';
+
+		var map = new GMap2(document.getElementById("map"));
+		
+		var mapControl = new GSmallMapControl();
+		map.addControl(mapControl);
+		
+		var geocoder = new GClientGeocoder();
+		geocoder.getLatLng(address + ',' + city + ',the Netherlands', function(point) {
+			map.setCenter(point, 15);
+			var marker = new GMarker(point);
+			map.addOverlay(marker);
+		});
+	});
+</script>
+{% endblock %}
+	
+
+{% block content %}
+	<dl class="vcard">
+		<dt>Naam</dt>
+		<dd class="org">{{ school.name }}</dd>
+		
+		<dt>Telefoon</dt>
+		<dd class="tel">{{ school.telephone }}</dd>
+
+		<dt>Website</dt>
+		<dd>
+		{% if school.website %}
+			<a class="url" href="http://{{ school.website }}">{{ school.website }}</a>
+		{% endif %}
+		</dd>
+		
+		<dt>Onderwijsgebied</dt>
+		<dd>{{ school.area }}</dd>
+		
+		<dt>Schoolsoort</dt>
+		<dd>{{ school.kind }}</dd>
+		
+		<dt>Adres</dt>
+		<dd class="adr"><span class="street-address">{{ school.street }}</span><br>
+			<span class="postal-code">{{ school.postcodecity }}</span><br>
+		</dd>
+	</dl>
+		
+	<p><a href="{{ url }}" rel="alternate">Originele bron</a></p>
+{% endblock %}
